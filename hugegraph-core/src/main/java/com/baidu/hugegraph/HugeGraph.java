@@ -222,5 +222,6 @@ public interface HugeGraph extends Graph {
 
     public static void registerEnums() {
         SerialEnum.register(Action.class);
+        SerialEnum.register(HugeType.class);
     }
 }
