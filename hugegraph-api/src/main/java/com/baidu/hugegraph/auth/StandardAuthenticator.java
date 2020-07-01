@@ -21,6 +21,7 @@ package com.baidu.hugegraph.auth;
 
 import java.io.Console;
 import java.net.InetAddress;
+import java.util.Map;
 import java.util.Scanner;
 
 import org.apache.commons.lang.NotImplementedException;
@@ -29,6 +30,7 @@ import org.apache.tinkerpop.gremlin.structure.util.GraphFactory;
 import com.baidu.hugegraph.HugeGraph;
 import com.baidu.hugegraph.config.HugeConfig;
 import com.baidu.hugegraph.config.ServerOptions;
+import com.baidu.hugegraph.util.ConfigUtil;
 import com.baidu.hugegraph.util.E;
 import com.baidu.hugegraph.util.StringEncoding;
 
@@ -72,7 +74,9 @@ public class StandardAuthenticator implements HugeAuthenticator {
     @Override
     public void setup(HugeConfig config) {
         String graphName = config.get(ServerOptions.AUTH_GRAPH_STORE);
-        String graphPath = config.getMap(ServerOptions.GRAPHS).get(graphName);
+        Map<String, String> graphConfs = ConfigUtil.scanGraphsDir(
+                                         config.get(ServerOptions.GRAPHS));
+        String graphPath = graphConfs.get(graphName);
         E.checkArgument(graphPath != null,
                         "Invalid graph name '%s'", graphName);
         this.graph = (HugeGraph) GraphFactory.open(graphPath);
